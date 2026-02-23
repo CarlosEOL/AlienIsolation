@@ -120,9 +120,9 @@ public class Controller : MonoBehaviour
 
         // Apply only the accumulated rotation
         Quaternion targetRotation = Quaternion.Euler(0, _yRotation, 0);
-        rb.MoveRotation(targetRotation); 
+        rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, turnSpeed * Time.deltaTime);
         
-        Quaternion camRot = Quaternion.Euler(_xRotation, 0, 0);
+        Quaternion camRot = Quaternion.Euler(_xRotation, _yRotation, 0);
         cam.transform.rotation = camRot;
         
         Vector3 forward = cam.transform.forward.normalized;

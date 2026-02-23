@@ -755,6 +755,7 @@ MonoBehaviour:
   speed: 5
   turnSpeed: 9
   jumpPower: 10
+  sensitivity: 0.23
 --- !u!114 &567894527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1017,7 +1018,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 613383533}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.00034655866, y: 0.23087163, z: 0.00008223213, w: 0.9729842}
+  m_LocalRotation: {x: -0.00034656178, y: 0.2308716, z: 0.00008223415, w: 0.9729842}
   m_LocalPosition: {x: 0, y: 0.689682, z: -3.5413494}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

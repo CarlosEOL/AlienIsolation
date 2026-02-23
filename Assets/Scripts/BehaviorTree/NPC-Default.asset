@@ -12,14 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c02bb70996b49eba31d0c206e28da24, type: 3}
   m_Name: NPC-Default Blackboard
   m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.RuntimeBlackboardAsset
-  VersionTimestamp: 639073178051394612
+  VersionTimestamp: 639074005619871835
   AssetID:
-    m_Value0: 0
-    m_Value1: 0
+    m_Value0: 2610491344110008933
+    m_Value1: 13877494939518274507
   m_Blackboard:
     m_Variables:
     - rid: 5301655357292544186
-  m_SharedBlackboardVariableGuids: []
+    - rid: 5301655374729052370
+  m_SharedBlackboardVariableGuids:
+  - m_Value0: 10521613345301439215
+    m_Value1: 8944062579905898858
   references:
     version: 2
     RefIds:
@@ -30,6 +33,14 @@ MonoBehaviour:
           m_Value0: 1
           m_Value1: 0
         Name: Self
+        m_Value: {fileID: 0}
+    - rid: 5301655374729052370
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 10521613345301439215
+          m_Value1: 8944062579905898858
+        Name: Player
         m_Value: {fileID: 0}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -47,7 +58,7 @@ MonoBehaviour:
   m_Description: 
   m_Nodes:
   - rid: 5301655357292544187
-  m_VersionTimestamp: 639073178051546002
+  m_VersionTimestamp: 639074005621737331
   m_SerializedVersion: 2
   m_DebugInfo: {fileID: 3667663879404737533}
   m_RuntimeGraph: {fileID: 3602812524511415149}
@@ -121,11 +132,12 @@ MonoBehaviour:
   m_Name: NPC-Default Blackboard
   m_EditorClassIdentifier: Unity.Behavior.Authoring::Unity.Behavior.BehaviorBlackboardAuthoringAsset
   AssetID:
-    m_Value0: 0
-    m_Value1: 0
+    m_Value0: 2610491344110008933
+    m_Value1: 13877494939518274507
   m_Variables:
   - rid: 5301655357292544189
-  m_VersionTimestamp: 639073178051394612
+  - rid: 5301655374729052369
+  m_VersionTimestamp: 639074005619871835
   m_CommandBuffer:
     m_Commands: []
   m_RuntimeBlackboardAsset: {fileID: -6981925536413689112}
@@ -141,6 +153,16 @@ MonoBehaviour:
         Name: Self
         IsExposed: 1
         m_IsShared: 0
+        m_Value: {fileID: 0}
+    - rid: 5301655374729052369
+      type: {class: 'TypedVariableModel`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 10521613345301439215
+          m_Value1: 8944062579905898858
+        Name: Player
+        IsExposed: 1
+        m_IsShared: 1
         m_Value: {fileID: 0}
 --- !u!114 &3602812524511415149
 MonoBehaviour:
@@ -174,15 +196,21 @@ MonoBehaviour:
           rid: 5301655357292544191
         BlackboardGroupReferences: []
         Root:
-          rid: 5301655357292544192
-        m_VersionTimestamp: 639073178051546002
+          rid: 5301655374729052377
+        m_VersionTimestamp: 639074005621737331
     - rid: 5301655357292544191
       type: {class: BlackboardReference, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         m_Blackboard:
           rid: 5301655357292544193
         m_Source: {fileID: -6981925536413689112}
-    - rid: 5301655357292544192
+    - rid: 5301655357292544193
+      type: {class: Blackboard, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        m_Variables:
+        - rid: 5301655374729052378
+        - rid: 5301655374729052379
+    - rid: 5301655374729052377
       type: {class: Start, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -196,12 +224,7 @@ MonoBehaviour:
           rid: -2
         Repeat: 1
         AllowMultipleRepeatsPerTick: 0
-    - rid: 5301655357292544193
-      type: {class: Blackboard, ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        m_Variables:
-        - rid: 5301655357292544194
-    - rid: 5301655357292544194
+    - rid: 5301655374729052378
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -209,6 +232,15 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 0}
+    - rid: 5301655374729052379
+      type: {class: 'SharedBlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 10521613345301439215
+          m_Value1: 8944062579905898858
+        Name: Player
+        m_Value: {fileID: 0}
+        m_SharedVariablesRuntimeAsset: {fileID: -6981925536413689112}
 --- !u!114 &3667663879404737533
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,15 +1,17 @@
-﻿namespace StateMachine
-{
-    public struct Node : IAction
-    {
-        IAction[] Actions;
+﻿using UnityEngine;
 
-        void IAction.ExecuteAction()
-        {
-            foreach (IAction action in Actions)
-            {
-                action.ExecuteAction();
-            }
-        }
+namespace StateMachine
+{
+    public class Node : ScriptableObject
+    {
+        private TrueFalseDecision _evaluateDecision;
+        
+        
+
+    }
+
+    public class NodeFunctions : MonoBehaviour
+    {
+        
     }
 }
