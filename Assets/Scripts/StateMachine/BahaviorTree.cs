@@ -1,29 +1,32 @@
 
+using NPCs;
 using Unity.Behavior;
 using UnityEngine;
 
 namespace StateMachine
 {
-    public class BehaviorTree
+    [CreateAssetMenu(fileName = "Behavior Tree", menuName = "Scriptable Objects/Behavior Tree")]
+    public class BehaviorTree : ScriptableObject
     {
         private static BehaviorGraph behaviorGraph;
-        private string _name = "";
-        public string _description = "";
+        public string name;
+        public string description;
 
         public Node PrimaryNode;
         public Node[] Nodes;
+        public TrueFalseDecision DefaultDecision;
 
         public NPC npc { get; private set; }
 
-        public BehaviorTree(string name, Node[] nodes, NPC npc)
+        public BehaviorTree(string Name, Node[] Nodes, NPC Npc)
         {
-            _name = name;
+            name = Name;
         }
 
         private void Start()
         {
             behaviorGraph = ScriptableObject.CreateInstance<BehaviorGraph>();
-            behaviorGraph.name = _name;
+            behaviorGraph.name = name;
         }
     }
 }
