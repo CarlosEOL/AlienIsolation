@@ -5,35 +5,29 @@ using UnityEngine.AI;
 
 namespace NPCs
 {
-    public interface INpcActions
+    public class NPC : MonoBehaviour
     {
-        bool CanMove();
-        void Wonder();
-    }
-    
-    public class NPC : MonoBehaviour, INpcActions
-    {
-        [SerializeField] NavMeshAgent agent;
+        [SerializeField] public NavMeshAgent agent;
         [SerializeField] float acceleration;
         
         [SerializeField] bool canMove = true;
+        
+        [SerializeField] BehaviourTree behaviorTree;
+        [SerializeField] ScriptableObject currentActionSO;
+        
+        public Transform target;
         
         private void Awake()
         {
             agent.enabled = true;
             agent.acceleration = acceleration;
         }
-
-        bool INpcActions.CanMove()
+        
+        void Update() 
         {
-            return canMove;
-        }
-
-        public void Wonder()
-        {
-            if (canMove)
+            if (behaviorTree != null) 
             {
-                
+                behaviorTree.Tick(this);
             }
         }
     }

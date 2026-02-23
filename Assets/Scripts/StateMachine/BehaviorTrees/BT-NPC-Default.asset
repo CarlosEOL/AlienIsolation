@@ -15,4 +15,6 @@ MonoBehaviour:
   name: 
   description: 
   PrimaryNode: {fileID: 0}
-  Nodes: []
+  Nodes:
+  - {fileID: 0}
+  - {fileID: 0}
