@@ -4,18 +4,16 @@ using UnityEngine;
 namespace StateMachine
 {
     [CreateAssetMenu(menuName = "State Machine/Actions/Wonder")]
-    public class WonderAction : Node, IAction
+    public class GoToAction : Node
     {
         public float speed;
         public override NodeStatus Execute(NPC npc) 
         {
-            if (npc.target == null) return NodeStatus.Failure;
+            if (npc.Target == null) return NodeStatus.Failure;
             
-            if (npc.target != null) 
+            if (npc.Target != null) 
             {
-                npc.agent.speed = speed;
-                npc.agent.SetDestination(npc.target.position);
-                //npc.Animator.SetBool("IsChasing", true);
+                npc.agent.SetDestination(npc.Target.position);
             }
             
             return NodeStatus.Running;

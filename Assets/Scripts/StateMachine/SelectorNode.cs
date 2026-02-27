@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using NPCs;
+using UnityEngine;
 
 namespace StateMachine
 {
-    public class Selector : Node
+    [CreateAssetMenu(fileName = "Node", menuName = "State Machine/Nodes/Selector")]
+    public class SelectorNode : Node
     {
         public List<Node> children = new List<Node>();
 

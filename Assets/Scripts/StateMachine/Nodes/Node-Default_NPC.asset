@@ -9,12 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c2165670f1aa18499fac5ece6ff3cb1, type: 3}
-  m_Name: BT-NPC-Default
-  m_EditorClassIdentifier: Assembly-CSharp::StateMachine.BehaviorTree
-  name: 
-  description: 
-  PrimaryNode: {fileID: 0}
-  Nodes:
-  - {fileID: 0}
-  - {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 98a2a4878ef24521ba95c6f14a139894, type: 3}
+  m_Name: Node-Default_NPC
+  m_EditorClassIdentifier: Assembly-CSharp::StateMachine.ParallelNode
+  children:
+  - {fileID: 11400000, guid: ffaa53dcd2e774d4ebe95fe4f9f5503d, type: 2}
