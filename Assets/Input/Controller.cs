@@ -1,6 +1,8 @@
-using System;
+
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Interactable;
 
 [RequireComponent(typeof(PlayerInputs))]
 [RequireComponent(typeof(Rigidbody))]
@@ -13,6 +15,7 @@ public class Controller : MonoBehaviour
     [SerializeField] Rigidbody rb;
     [SerializeField] TogglePerspective togglePerspective;
     [SerializeField] Transform cameraTarget;
+    [SerializeField] TMP_Text txt;
 
     [SerializeField]bool canJump = true;
     [SerializeField]private float speed;
@@ -28,10 +31,18 @@ public class Controller : MonoBehaviour
     private float _xRotation;
 
     private bool _isRunning;
+    
+    LayerMask _layerMask;
+    private RaycastHit _hit;
+    Interactables _currentInteractables;
+    private string _interactableName;
+
+    public bool isHiding;
 
     private void Awake()
     {
         _inputs = new PlayerInputs();
+        _layerMask = LayerMask.GetMask("Interactable");
     }
 
     private void OnEnable()
@@ -49,13 +60,33 @@ public class Controller : MonoBehaviour
 
         _inputs.Movement.Jump.performed += _ =>
         {
-            if (canJump)
+            if (canJump && !isHiding)
             {
                 rb.AddForce(transform.up * jumpPower, ForceMode.Impulse);
                 canJump = false;
             }
         };
-        
+
+        _inputs.Movement.Interact.started += _ =>
+        {
+            if (_currentInteractables != null)
+            {
+                _currentInteractables.Interact(this);
+                _currentInteractables = null;
+            }
+            else if (_currentInteractables == null)
+            {
+                if (_hit.collider.CompareTag("Interactable"))
+                {
+                    _currentInteractables = _hit.transform.GetComponent<Interactables>();
+                    _currentInteractables.Interact(this);
+                }
+            }
+            
+            rb.GetComponent<Collider>().isTrigger = isHiding;
+            rb.useGravity = !isHiding;
+        };
+
         // UI Controls
         _inputs.UI.TogglePerspective.started += _ =>
         {
@@ -70,7 +101,7 @@ public class Controller : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log($"X: {x}, Y: {y}");
+        //Debug.Log($"X: {x}, Y: {y}");
     }
 
     private void FixedUpdate()
@@ -80,8 +111,6 @@ public class Controller : MonoBehaviour
             MoveBaseOnCam(camera, y, x);
         else
             MoveBaseOnCam(cameraTarget, mx, my);
-        
-        
     }
 
     void HandleMove(InputAction.CallbackContext ctx)
@@ -100,6 +129,10 @@ public class Controller : MonoBehaviour
 
     private void MoveBaseOnCam(Camera cam, float forward, float right)
     {
+        if (isHiding) return;
+        
+        HandleRaycasts(cam.transform, 10f);
+        
         Vector3 target = (cam.transform.forward * forward) + (cam.transform.right * right);
         target = target.normalized;
         
@@ -115,6 +148,10 @@ public class Controller : MonoBehaviour
 
     private void MoveBaseOnCam(Transform cam, float mousex, float mousey)
     {
+        if (isHiding) return;
+        
+        HandleRaycasts(cam, 10f);
+        
         _yRotation += mousex * sensitivity;
         _xRotation += -(mousey * sensitivity);
 
@@ -142,5 +179,24 @@ public class Controller : MonoBehaviour
             canJump = true;
         }
     }
-}
 
+    void HandleRaycasts(Transform origin, float maxDistance)
+    {
+        if (Physics.Raycast(origin.position, origin.forward, out RaycastHit hit, maxDistance, _layerMask))
+        {
+            if (hit.collider.CompareTag("Interactable"))
+            {
+                _hit = hit;
+                txt.enabled = true;
+                _interactableName = hit.transform.GetComponent<Interactables>().GetName();
+                Debug.Log($"Got an {_interactableName} on sight.");
+                txt.text = $"Press E to interact with {_interactableName}";
+            }
+        }
+        else
+        {
+            _hit = new RaycastHit();
+            txt.enabled = false;
+        }
+    }
+}

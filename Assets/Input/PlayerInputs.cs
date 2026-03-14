@@ -127,6 +127,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""ab92e640-cbc1-4886-8625-68b566743a6d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -217,6 +226,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""LookAround"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7c238c87-f1b0-4971-8bb7-2a77a61df327"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -257,6 +277,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_Movement_Jump = m_Movement.FindAction("Jump", throwIfNotFound: true);
         m_Movement_Run = m_Movement.FindAction("Run", throwIfNotFound: true);
         m_Movement_LookAround = m_Movement.FindAction("LookAround", throwIfNotFound: true);
+        m_Movement_Interact = m_Movement.FindAction("Interact", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_TogglePerspective = m_UI.FindAction("TogglePerspective", throwIfNotFound: true);
@@ -345,6 +366,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Movement_Jump;
     private readonly InputAction m_Movement_Run;
     private readonly InputAction m_Movement_LookAround;
+    private readonly InputAction m_Movement_Interact;
     /// <summary>
     /// Provides access to input actions defined in input action map "Movement".
     /// </summary>
@@ -372,6 +394,10 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Movement/LookAround".
         /// </summary>
         public InputAction @LookAround => m_Wrapper.m_Movement_LookAround;
+        /// <summary>
+        /// Provides access to the underlying input action "Movement/Interact".
+        /// </summary>
+        public InputAction @Interact => m_Wrapper.m_Movement_Interact;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -410,6 +436,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @LookAround.started += instance.OnLookAround;
             @LookAround.performed += instance.OnLookAround;
             @LookAround.canceled += instance.OnLookAround;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
         }
 
         /// <summary>
@@ -433,6 +462,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @LookAround.started -= instance.OnLookAround;
             @LookAround.performed -= instance.OnLookAround;
             @LookAround.canceled -= instance.OnLookAround;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
         }
 
         /// <summary>
@@ -597,6 +629,13 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLookAround(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Interact" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnInteract(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
