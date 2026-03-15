@@ -5,12 +5,6 @@ namespace StateMachine
 {
     public class Blackboard
     {
-        // Common variables for the Alien AI
-        public Transform CurrentTarget;
-        public Vector3 LastKnownPlayerPosition;
-        public float IdleTimer = 0f;
-        public bool IsAlerted = false;
-
         // A dictionary for more dynamic/flexible data needs
         private Dictionary<string, object> data = new();
 

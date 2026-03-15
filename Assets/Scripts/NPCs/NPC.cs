@@ -17,7 +17,6 @@ namespace NPCs
         [SerializeField] bool canMove = true;
         
         [SerializeField] BehaviourTree behaviorTree;
-        [SerializeField] ScriptableObject currentActionSO;
 
         private Transform _currentTarget;
         public Transform Target
@@ -30,8 +29,8 @@ namespace NPCs
             }
         }
 
-        [SerializeField] public List<Transform> pointsOfInterests = new List<Transform>();
-        private List<Vector3> _pointsOfInterests = new List<Vector3>();
+        [SerializeField] public List<Transform> pointsOfInterests = new();
+        private List<Vector3> _pointsOfInterests = new();
 
         private bool _isRunning = false;
         public bool IsRunning
@@ -60,18 +59,18 @@ namespace NPCs
         
         private void Awake()
         {
+            //Checksum for value change: if isRunning, speed change to run. if Target is a player or a distraction, it isRunning.
+            OnTargetChanged = currentTarget => { IsRunning = currentTarget.gameObject.CompareTag("Player"); };
+            OnValueChanged = isItRunning => { agent.speed = isItRunning ? runSpeed : walkSpeed; };
+            
             agent.enabled = true;
             
             behaviorTree = Instantiate(behaviorTree);
             
             Target = transform;
 
-            Debug.Log(CheckPOI() ? "Actor has POIs." : "Generating POI for Actor");
-
-            ChangeTarget();
-            //Checksum for value change: if isRunning, speed change to run. if Target is a player or a distraction, it isRunning.
-            OnValueChanged = isItRunning => { agent.speed = isItRunning ? runSpeed : walkSpeed; };
-            OnTargetChanged = currentTarget => { IsRunning = currentTarget.gameObject.CompareTag("Player"); };
+            HasSetPOI = CheckPOI();
+            Debug.Log(HasSetPOI ? "Actor has POIs." : "Generating POI for Actor");
         }
         
         void Update() 
@@ -84,7 +83,7 @@ namespace NPCs
 
         private void FixedUpdate()
         {
-            if (Vector3.Distance(transform.position, Target.position) < 5f)
+            if (Vector3.Distance(transform.position, Target.position) < 0.5f)
             {
                 ChangeTarget();
             }
@@ -100,14 +99,22 @@ namespace NPCs
                     _pointsOfInterests.Add(p.position);
                     Debug.Log($"x: {p.position.x}, y: {p.position.y}, z: {p.position.z}");
                 }
+
+                Target = pointsOfInterests[0];
+                Debug.Log($"Current Target Location: {Target.position}");
                 return true;
             }
-            
-            // Add Random Point to POI in case if there aren't any targets.
-            for (int i = 0; i < 3; i++)
+
+            if (_pointsOfInterests.Count < 1)
             {
-                _pointsOfInterests.Add(new Vector3(transform.position.x + Random.Range(-50, 50), 0, transform.position.z + Random.Range(-50, 50)));
+                for (int i = 0; i < 3; i++)
+                {
+                    _pointsOfInterests.Add(new Vector3(transform.position.x + Random.Range(-50, 50), 0, transform.position.z + Random.Range(-50, 50)));
+                }
+                Target = new GameObject().transform;
+                Target.position = _pointsOfInterests[0];
             }
+                
             return false;
         }
 
@@ -117,10 +124,17 @@ namespace NPCs
             if (_pointsOfInterests.Count > 0)
                 index = Random.Range(0, _pointsOfInterests.Count - 1);
             else
-                CheckPOI();    
+                CheckPOI();
+
+            Debug.Log($"Current Target Location: {Target.position}");
             
             Target.position = _pointsOfInterests[index];
             _pointsOfInterests.RemoveAt(index);
+        }
+
+        public virtual void HasPlayerInsight()
+        {
+            
         }
     }
 }

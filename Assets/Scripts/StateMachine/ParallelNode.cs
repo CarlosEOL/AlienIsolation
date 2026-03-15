@@ -7,7 +7,7 @@ namespace StateMachine
     [CreateAssetMenu(fileName = "Node", menuName = "State Machine/Nodes/Parallel")]
     public class ParallelNode : Node
     {
-        public List<Node> children = new List<Node>();
+        public List<Node> children = new();
 
         public override NodeStatus Execute(NPC npc) 
         {

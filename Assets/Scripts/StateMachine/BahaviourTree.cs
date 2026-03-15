@@ -14,6 +14,8 @@ namespace StateMachine
 
         public Node PrimaryNode;
 
+        public bool CanRepeat;
+
         public BehaviourTree(string Name, Node[] Nodes, NPC Npc)
         {
             name = Name;

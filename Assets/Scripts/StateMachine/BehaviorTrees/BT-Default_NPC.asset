@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: BT-Default_NPC
   m_EditorClassIdentifier: Assembly-CSharp::StateMachine.BehaviourTree
   name: Default
-  description: 
+  description: Default for using State Machine
   PrimaryNode: {fileID: 11400000, guid: 00c995cc3ab0f2c448489641e1f17c79, type: 2}
+  CanRepeat: 1

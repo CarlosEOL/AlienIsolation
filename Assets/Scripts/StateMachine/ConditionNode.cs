@@ -6,13 +6,15 @@ namespace StateMachine
     [CreateAssetMenu(fileName = "Node", menuName = "State Machine/Nodes/Condition")]
     public class ConditionNode : Node
     {
-        [SerializeField] Node[] children;
-        
+        public string npcMethodCallback;
+
         public override NodeStatus Execute(NPC npc)
         {
-            
-            
-            return NodeStatus.Failure;
+            // Search the NPC script for a method with this name
+            var method = npc.GetType().GetMethod(npcMethodCallback);
+            bool result = (bool)method.Invoke(npc, null);
+    
+            return result ? NodeStatus.Success : NodeStatus.Failure;
         }
     }
 }
