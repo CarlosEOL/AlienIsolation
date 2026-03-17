@@ -19,7 +19,7 @@ namespace StateMachine
                 NodeStatus status = child.Execute(npc);
 
                 if (status == NodeStatus.Failure) 
-                    return NodeStatus.Failure; // Fail immediately if any child fails
+                    return NodeStatus.Failure;
             
                 if (status == NodeStatus.Running) 
                     anyChildRunning = true;
@@ -28,6 +28,7 @@ namespace StateMachine
                     successCount++;
             }
 
+            Debug.Log("Successfully executed " + successCount + " nodes");
             // If at least one child is still working, the whole Parallel node is 'Running'
             return anyChildRunning ? NodeStatus.Running : NodeStatus.Success;
         }

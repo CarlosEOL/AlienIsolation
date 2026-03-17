@@ -21,13 +21,10 @@ namespace StateMachine
             name = Name;
             behaviorGraph = CreateInstance<BehaviorGraph>();
             behaviorGraph.name = Name;
-            
-            // Node and NPC functions goes below
         }
         
         public void Tick(NPC npc)
         {
-            // The PrimaryNode is usually your Root (e.g., a Selector or Sequence)
             if (PrimaryNode != null) 
             {
                 PrimaryNode.Execute(npc);

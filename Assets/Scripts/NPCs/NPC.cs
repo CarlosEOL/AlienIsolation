@@ -112,6 +112,7 @@ namespace NPCs
                     _pointsOfInterests.Add(new Vector3(transform.position.x + Random.Range(-50, 50), 0, transform.position.z + Random.Range(-50, 50)));
                 }
                 Target = new GameObject().transform;
+                Target.name = "Point Of Interests";
                 Target.position = _pointsOfInterests[0];
             }
                 
