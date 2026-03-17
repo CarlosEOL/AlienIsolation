@@ -1,2 +1,2 @@
-# AlienIsolation
-Enemy Behavior Tree Created via Behavior Plugin in Unity
+# Alien Isolation
+Enemy Behaviour Tree Created via Scriptable Object (SO) & Behaviour Plugin in Unity
