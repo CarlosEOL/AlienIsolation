@@ -9,6 +9,7 @@ using Interactable;
 [RequireComponent(typeof(Collider))]
 public class Controller : MonoBehaviour
 {
+    [Header("Player Settings")]
     PlayerInputs _inputs;
     
     [SerializeField] new Camera camera;
@@ -32,12 +33,18 @@ public class Controller : MonoBehaviour
 
     private bool _isRunning;
     
+    [Header("Interactable Settings")]
     LayerMask _layerMask;
     private RaycastHit _hit;
     Interactables _currentInteractables;
     private string _interactableName;
 
     public bool isHiding;
+    
+    [SerializeField] public AudioSource audioClip;
+
+    [Header("NPC Recruitment Settings")] [SerializeField]
+    private int RecruitmentAmount = 5;
 
     private void Awake()
     {
@@ -80,6 +87,7 @@ public class Controller : MonoBehaviour
                 {
                     _currentInteractables = _hit.transform.GetComponent<Interactables>();
                     _currentInteractables.Interact(this);
+                    Debug.Log($"Is hiding: {isHiding}");
                 }
             }
             
@@ -189,7 +197,6 @@ public class Controller : MonoBehaviour
                 _hit = hit;
                 txt.enabled = true;
                 _interactableName = hit.transform.GetComponent<Interactables>().GetName();
-                Debug.Log($"Got an {_interactableName} on sight.");
                 txt.text = $"Press E to interact with {_interactableName}";
             }
         }

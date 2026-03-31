@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ed05df21af44d2faf5ecf9a137a4d76, type: 3}
+  m_Name: Node-Alien-CheckGoals
+  m_EditorClassIdentifier: Assembly-CSharp::StateMachine.CheckGoalNode
+  IdleNode: {fileID: 11400000, guid: 96dd660d0ffc5b34ab806ae0b37d39d0, type: 2}
+  HuntNode: {fileID: 11400000, guid: 62bd3d06df8017b4b9375a41ee3d6ef0, type: 2}
+  PursueNode: {fileID: 11400000, guid: d26a396abe4136b489dbe50554dfebd9, type: 2}
+  WanderNode: {fileID: 11400000, guid: cdf17cc811280bf44b2f1b23a94a2ea9, type: 2}

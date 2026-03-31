@@ -3,16 +3,17 @@ using UnityEngine;
 
 namespace Interactable
 {
-    public class HidingSpot : Interactables
+    public class HidingSpot : Interactables, IInteractables
     {
-        [SerializeField] public Transform[] points =  new Transform[2];
-        
-        HidingSpot()
-        {
-            name = "HidingSpot";
-        }
+        [SerializeField] public Transform[] points = new Transform[2];
 
         public override void Interact(Controller controller)
+        {
+            base.Interact(controller);
+            LockerFunction(controller);
+        }
+
+        void LockerFunction(Controller controller)
         {
             if (!controller.isHiding)
             {
@@ -27,6 +28,5 @@ namespace Interactable
                 controller.transform.position = points[1].position;
             }
         }
-        
     }
 }

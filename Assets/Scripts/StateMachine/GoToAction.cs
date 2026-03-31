@@ -15,7 +15,13 @@ namespace StateMachine
             {
                 npc.agent.SetDestination(npc.Target.position);
                 Debug.Log("Going to " + npc.Target.name);
-                return NodeStatus.Success;
+
+                if (npc.CheckIsInTargetRange())
+                {
+                    npc.ChangeTarget();
+                    Debug.Log("Arrived at  " + npc.Target.name);
+                    return NodeStatus.Success;
+                }
             }
             
             return NodeStatus.Running;

@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using Interactable;
 using StateMachine;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,15 +9,20 @@ using Random = UnityEngine.Random;
 
 namespace NPCs
 {
-    public class NPC : MonoBehaviour
+    public class NPC : MonoBehaviour, IStateAndGoals, IInteractables
     {
         [SerializeField] public NavMeshAgent agent;
         [SerializeField] public float walkSpeed;
         [SerializeField] public float runSpeed;
         
         [SerializeField] bool canMove = true;
+        [SerializeField] bool isEnemy = false;
+        [SerializeField] bool canFlock = true;
+        [SerializeField] public IStateAndGoals.NPCGoals currentGoals = IStateAndGoals.NPCGoals.Protect;
+        [SerializeField] public IStateAndGoals.NPCState currentState = IStateAndGoals.NPCState.Idle;
         
-        [SerializeField] BehaviourTree behaviorTree;
+        [SerializeField] BehaviourTree defaultBehaviorTree;
+        [SerializeField] BehaviourTree flockBehaviorTree;
 
         private Transform _currentTarget;
         public Transform Target
@@ -65,7 +71,8 @@ namespace NPCs
             
             agent.enabled = true;
             
-            behaviorTree = Instantiate(behaviorTree);
+            defaultBehaviorTree = Instantiate(defaultBehaviorTree);
+            flockBehaviorTree = Instantiate(flockBehaviorTree);
             
             Target = transform;
 
@@ -75,17 +82,16 @@ namespace NPCs
         
         void Update() 
         {
-            if (behaviorTree != null && canMove) 
+            if (currentGoals == IStateAndGoals.NPCGoals.Idle) return;
+            if (currentGoals == IStateAndGoals.NPCGoals.Protect)
             {
-                behaviorTree.Tick(this);
+                flockBehaviorTree.Tick(this);
+                return;
             }
-        }
-
-        private void FixedUpdate()
-        {
-            if (Vector3.Distance(transform.position, Target.position) < 0.5f)
+            
+            if (defaultBehaviorTree != null && canMove) 
             {
-                ChangeTarget();
+                defaultBehaviorTree.Tick(this);
             }
         }
 
@@ -119,7 +125,7 @@ namespace NPCs
             return false;
         }
 
-        void ChangeTarget()
+        public void ChangeTarget()
         {
             int index = 0;
             if (_pointsOfInterests.Count > 0)
@@ -133,9 +139,33 @@ namespace NPCs
             _pointsOfInterests.RemoveAt(index);
         }
 
-        public virtual void HasPlayerInsight()
+        protected virtual bool HasTargetInsight()
         {
             
+            
+            return false;
+        }
+
+        public virtual bool CheckIsInTargetRange()
+        {
+            if (Vector3.Distance(transform.position, Target.position) < 0.8f)
+            {
+                return true;
+            }
+            
+            return false;
+        }
+
+        public string GetName()
+        {
+            return name;
+        }
+
+        public void Interact(Controller controller)
+        {
+            Debug.Log($"Added {name} to Party!");
+            currentGoals = IStateAndGoals.NPCGoals.Protect;
+            Target = controller.transform;
         }
     }
 }

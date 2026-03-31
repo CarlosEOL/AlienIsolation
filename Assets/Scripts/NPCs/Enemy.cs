@@ -17,6 +17,7 @@ namespace NPCs
                     // Raycast to check for walls/obstacles
                     if (!Physics.Linecast(npc.position, player.position, layerMask: player.gameObject.layer))
                     {
+                        Debug.Log("I SEE YOU!");
                         return true; // Detected!
                     }
                 }

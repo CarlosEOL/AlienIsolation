@@ -9,7 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f74409dab0344f7e86a8ea5cf58d5a5c, type: 3}
-  m_Name: Wonder
-  m_EditorClassIdentifier: Assembly-CSharp::StateMachine.GoToAction
-  speed: 2
+  m_Script: {fileID: 11500000, guid: 98a2a4878ef24521ba95c6f14a139894, type: 3}
+  m_Name: Node-Hunt
+  m_EditorClassIdentifier: Assembly-CSharp::StateMachine.ParallelNode
+  children:
+  - {fileID: 0}
+  - {fileID: 0}

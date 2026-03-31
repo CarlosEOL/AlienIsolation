@@ -1,16 +1,25 @@
-﻿
+﻿using System;
 using UnityEngine;
 
 namespace Interactable
 {
-    public abstract class Interactables : MonoBehaviour
+    public class Interactables : MonoBehaviour, IInteractables
     {
-        public string name;
-        public abstract void Interact(Controller controller);
+        [SerializeField] public string itemName;
 
-        public string GetName()
+        private void Awake()
         {
-            return name;
+            gameObject.name = itemName;
+        }
+
+        public virtual string GetName()
+        {
+            return itemName;
+        }
+
+        public virtual void Interact(Controller controller)
+        {
+            controller.audioClip.Play();
         }
     }
 }
