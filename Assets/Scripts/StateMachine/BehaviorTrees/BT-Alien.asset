@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StateMachine.BehaviourTree
   name: Alien Behavior Tree
   description: Start with Find and Kill
-  PrimaryNode: {fileID: 0}
+  PrimaryNode: {fileID: 11400000, guid: 21c25a0f278239b4f869110689fbbec9, type: 2}
   CanRepeat: 1

@@ -158,7 +158,8 @@ public class Controller : MonoBehaviour
         Vector3 target = (cam.transform.forward * forward) + (cam.transform.right * right);
         target = target.normalized;
         
-        transform.position += new Vector3(target.x, 0f, target.z) * (_isRunning ? speed * 2f: speed) * Time.deltaTime;
+        _linearVelocity = new Vector3(target.x, 0f, target.z) * (_isRunning ? speed * 2f: speed);
+        transform.position += _linearVelocity * Time.deltaTime;
         
         if (target != Vector3.zero)
         {
@@ -230,7 +231,8 @@ public class Controller : MonoBehaviour
         {
             Debug.Log("NPC in Range.");
             if (!npc.canFlock) return;
-
+            if (npc.currentGoals == IStateAndGoals.NPCGoals.Protect) return;
+            
             Debug.Log("Adding NPC to Rank.");
             npc.Target = transform;
             npc.Interact(this);

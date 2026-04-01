@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7feb8eb08ab498b859e26a149b9a9fb, type: 3}
+  m_Name: CheckTargetInSight
+  m_EditorClassIdentifier: Assembly-CSharp::StateMachine.ConditionNode
+  npcMethodCallback: HasTargetInSight
+  TrueNode: {fileID: 11400000, guid: da945e02d69461645b1861a60e722886, type: 2}
+  FalseNode: {fileID: 11400000, guid: 9592baac8391f8747a25675ec949f24c, type: 2}

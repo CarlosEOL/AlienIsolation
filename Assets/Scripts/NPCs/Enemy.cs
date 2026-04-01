@@ -4,9 +4,6 @@ namespace NPCs
 {
     public class Enemy : NPC
     {
-        
-        
-        
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.yellow;

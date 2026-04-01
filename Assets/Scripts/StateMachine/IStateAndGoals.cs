@@ -9,7 +9,8 @@
             Pursue,
             Investigate,
             Hide,
-            Wander
+            Wander,
+            Attack
         }
 
         public enum NPCGoals

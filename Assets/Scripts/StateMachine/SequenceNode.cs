@@ -7,7 +7,7 @@ namespace StateMachine.Nodes
     [CreateAssetMenu(fileName = "Node", menuName = "State Machine/Nodes/Sequence")]
     public class SequenceNode : Node
     {
-        [SerializeField] List<Node> children = new List<Node>();
+        [SerializeField] List<Node> children;
         private int currentIndex = 0;
 
         public override NodeStatus Execute(NPC npc)
@@ -15,6 +15,7 @@ namespace StateMachine.Nodes
             while (currentIndex < children.Count)
             {
                 NodeStatus status = children[currentIndex].Execute(npc);
+                Debug.Log(status.ToString());
         
                 if (status == NodeStatus.Running) return NodeStatus.Running;
                 if (status == NodeStatus.Failure)
@@ -26,7 +27,7 @@ namespace StateMachine.Nodes
                 currentIndex++;
             }
     
-            currentIndex = 0; // reset for next time sequence is entered
+            currentIndex = 0;
             return NodeStatus.Success;
         }
     }

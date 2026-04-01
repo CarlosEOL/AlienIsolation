@@ -13,13 +13,8 @@ MonoBehaviour:
   m_Name: Flock
   m_EditorClassIdentifier: Assembly-CSharp::StateMachine.FlockAction
   lookaheadTime: 0.5
-  separationRadius: 2
-  separationStrength: 1.5
-  arrivalRadius: 1.5
   speedSmoothing: 3
   destinationUpdateThreshold: 0.5
-  healRadius: 2
-  healAmount: 20
-  healCooldown: 60
-  healThreshold: 90
-  healthItemPrefab: {fileID: 7236685372407916431, guid: f3273ec106fe50d42b85307b42df196a, type: 3}
+  runRadius: 8
+  flockRadius: 2.5
+  stopRadius: 1.1

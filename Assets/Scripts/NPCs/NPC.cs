@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Interactable;
 using StateMachine;
 using UnityEngine;
+using UnityEngine.AdaptivePerformance.Basic;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
@@ -23,13 +24,13 @@ namespace NPCs
         [SerializeField] public IStateAndGoals.NPCState currentState = IStateAndGoals.NPCState.Idle;
         
         [SerializeField] BehaviourTree defaultBehaviorTree;
-        [SerializeField] BehaviourTree flockBehaviors;
+        [SerializeField] BehaviourTree protectBevaBehaviourTree;
         
         [SerializeField] private float separationRadius = 2f;
         [SerializeField] private float separationStrength = 1.5f;
 
         private Transform _currentTarget;
-        public Vector3 TargetLinearVelocity = Vector3.zero;
+        public Vector3 targetLinearVelocity;
         public Transform Target
         {
             get => _currentTarget;
@@ -38,12 +39,27 @@ namespace NPCs
                 _currentTarget = value;
                 Debug.Log($"Target Changed to {_currentTarget.name} for NPC {name}");
                 OnTargetChanged?.Invoke(_currentTarget);
-                
+
                 if (_currentTarget.TryGetComponent(out Controller _))
-                    TargetLinearVelocity = Controller._linearVelocity;
-                
+                {
+                    targetLinearVelocity = Controller._linearVelocity;
+                    SetAgentToFlocking();
+                }
+                else
+                {
+                    SetAgentToDefault();
+                }
+
+
                 if (_currentTarget.TryGetComponent(out NavMeshAgent a))
-                    TargetLinearVelocity = a.velocity;
+                {
+                    targetLinearVelocity = a.velocity;
+                    SetAgentToFlocking();
+                }
+                else
+                {
+                    SetAgentToDefault();
+                }
             }
         }
 
@@ -54,7 +70,7 @@ namespace NPCs
         public bool IsRunning
         {
             get => _isRunning;
-            private set
+            set
             {
                 if  (_isRunning != value)
                 {
@@ -66,11 +82,7 @@ namespace NPCs
 
         bool _hasLineOfSight;
 
-        public bool HasSetPOI
-        {
-            get;
-            private set;
-        }
+        public bool HasSetPOI;
         
         public Action<bool> OnValueChanged;
         public Action<Transform> OnTargetChanged;
@@ -89,12 +101,13 @@ namespace NPCs
             agent.enabled = true;
             
             defaultBehaviorTree = Instantiate(defaultBehaviorTree);
-            flockBehaviors = Instantiate(flockBehaviors);
+            protectBevaBehaviourTree = Instantiate(protectBevaBehaviourTree);
             
-            Target = transform;
-
+            Target = new GameObject().transform;
+            Target.position = transform.position;
+            
             HasSetPOI = CheckPOI();
-            Debug.Log(HasSetPOI ? "Actor has POIs." : "Generating POI for Actor");
+            Debug.Log(HasSetPOI ? "Actor has POIs." : $"Generating POI for {name}");
         }
         
         void Update() 
@@ -102,7 +115,7 @@ namespace NPCs
             if (currentGoals == IStateAndGoals.NPCGoals.Idle) return;
             if (currentGoals == IStateAndGoals.NPCGoals.Protect && canMove)
             {
-                flockBehaviors.Tick(this);
+                protectBevaBehaviourTree.Tick(this);
                 return;
             }
             
@@ -112,7 +125,7 @@ namespace NPCs
             }
         }
 
-        bool CheckPOI()
+        public bool CheckPOI()
         {
             if (pointsOfInterests.Count > 0)
             {
@@ -134,8 +147,7 @@ namespace NPCs
                 {
                     _pointsOfInterests.Add(new Vector3(transform.position.x + Random.Range(-50, 50), 0, transform.position.z + Random.Range(-50, 50)));
                 }
-                Target = new GameObject().transform;
-                Target.name = "Point Of Interests";
+                Target.name = "Target";
                 Target.position = _pointsOfInterests[0];
             }
                 
@@ -156,12 +168,12 @@ namespace NPCs
             _pointsOfInterests.RemoveAt(index);
         }
 
-        protected virtual bool HasTargetInsight()
+        public bool HasTargetInsight()
         {
             return IsTargetInCone(this.transform, Target, 10f, 65f);
         }
 
-        public virtual bool CheckIsInTargetRange()
+        public bool CheckIsInTargetRange()
         {
             if (Vector3.Distance(transform.position, Target.position) < 0.8f)
             {
@@ -220,6 +232,34 @@ namespace NPCs
                 }
             }
             return false;
+        }
+
+        public void Attack()
+        {
+            
+        }
+
+        // if target is player or friendly return
+        public bool CheckTargetTag()
+        {
+            if (Target.CompareTag("Player") || Target.CompareTag("Friendly")) return true;
+            return false;
+        }
+
+        void SetAgentToFlocking()
+        {
+            agent.autoBraking = false;
+            agent.stoppingDistance = 0f;
+            agent.angularSpeed = 70f;
+            agent.acceleration = 18f;
+        }
+        
+        void SetAgentToDefault()
+        {
+            agent.autoBraking = true;
+            agent.stoppingDistance = 0.5f;
+            agent.angularSpeed = 100f;
+            agent.acceleration = 10f;
         }
 
         private void OnDestroy()

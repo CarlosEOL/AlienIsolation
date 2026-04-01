@@ -14,32 +14,36 @@ namespace StateMachine
         [SerializeField] public Node WanderNode;
         public override NodeStatus Execute(NPC npc)
         {
-            IStateAndGoals.NPCGoals currentGoals = npc.currentGoals;
-            
-            switch (currentGoals)
+            switch (npc.currentGoals)
             {
                 case IStateAndGoals.NPCGoals.Idle:
                     npc.currentState = IStateAndGoals.NPCState.Idle;
-                    return IdleNode.Execute(npc);
+                    IdleNode.Execute(npc);
+                    break;
                 
                 case IStateAndGoals.NPCGoals.FindAndKill:
                     npc.currentState = IStateAndGoals.NPCState.Hunt;
-                    return HuntNode.Execute(npc);
+                    HuntNode.Execute(npc);
+                    Debug.Log($"{npc.name} has Started to HUNT!");
+                    break;
                 
                 case IStateAndGoals.NPCGoals.Lead:
                     npc.currentState = IStateAndGoals.NPCState.Hunt;
-                    return HuntNode.Execute(npc);
+                    HuntNode.Execute(npc);
+                    break;
                 
                 case IStateAndGoals.NPCGoals.Protect:
                     npc.currentState = IStateAndGoals.NPCState.Pursue;
-                    return PursueNode.Execute(npc);
+                    PursueNode.Execute(npc);
+                    break;
                 
                 case IStateAndGoals.NPCGoals.Wander:
                     npc.currentState = IStateAndGoals.NPCState.Wander;
-                    return WanderNode.Execute(npc);
+                    WanderNode.Execute(npc);
+                    break;
             }
             
-            return NodeStatus.Failure;
+            return NodeStatus.Running;
         }
     }
 }

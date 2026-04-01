@@ -7,14 +7,34 @@ namespace StateMachine
     public class ConditionNode : Node
     {
         public string npcMethodCallback;
+        private System.Reflection.MethodInfo _cachedMethod;
+
+        [SerializeField] private Node TrueNode;
+        [SerializeField] private Node FalseNode;
 
         public override NodeStatus Execute(NPC npc)
         {
+            NodeStatus status;
+            
             // Search the NPC script for a method with this name
-            var method = npc.GetType().GetMethod(npcMethodCallback);
-            bool result = (bool)method.Invoke(npc, null);
-    
-            return result ? NodeStatus.Success : NodeStatus.Failure;
+            if (_cachedMethod == null)
+                _cachedMethod = npc.GetType().GetMethod(npcMethodCallback);
+
+            if (_cachedMethod == null) return NodeStatus.Failure;
+
+            bool result = (bool)_cachedMethod.Invoke(npc, null);
+            Debug.Log("Condition Result: " + result);
+            
+            if (result)
+            {
+                status = TrueNode.Execute(npc);
+            }
+            else
+            {
+                status = FalseNode.Execute(npc);
+            }
+            
+            return status == NodeStatus.Running ? NodeStatus.Running : NodeStatus.Success;
         }
     }
 }
