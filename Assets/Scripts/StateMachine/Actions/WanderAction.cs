@@ -17,7 +17,7 @@ namespace StateMachine
                 return NodeStatus.Failure;
             }
             
-            if (npc.Target != null & !npc.CheckTargetTag())
+            if (npc.Target != null && !npc.CheckTargetTag(npc.Target.gameObject))
             {
                 npc.agent.SetDestination(npc.Target.position);
                 npc.agent.speed = speed;
@@ -25,7 +25,7 @@ namespace StateMachine
                 if (npc.CheckIsInTargetRange())
                 {
                     npc.ChangeTarget();
-                    Debug.Log("Arrived at  " + npc.Target.name);
+                    Debug.Log("Arrived at " + npc.Target.name);
                     return NodeStatus.Success;
                 }
             }

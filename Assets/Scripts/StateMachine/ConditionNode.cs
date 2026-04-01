@@ -23,7 +23,7 @@ namespace StateMachine
             if (_cachedMethod == null) return NodeStatus.Failure;
 
             bool result = (bool)_cachedMethod.Invoke(npc, null);
-            Debug.Log("Condition Result: " + result);
+            Debug.Log($"{npc.name}'s Condition Result: " + result);
             
             if (result)
             {
@@ -34,7 +34,7 @@ namespace StateMachine
                 status = FalseNode.Execute(npc);
             }
             
-            return status == NodeStatus.Running ? NodeStatus.Running : NodeStatus.Success;
+            return status;
         }
     }
 }

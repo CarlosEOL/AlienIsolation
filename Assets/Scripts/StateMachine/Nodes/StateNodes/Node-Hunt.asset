@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Node-Hunt
   m_EditorClassIdentifier: Assembly-CSharp::StateMachine.Nodes.SequenceNode
   children:
-  - {fileID: 11400000, guid: 9592baac8391f8747a25675ec949f24c, type: 2}
-  - {fileID: 11400000, guid: 14b4876d6d502864e8d43d316ae5cbfe, type: 2}
+  - {fileID: 11400000, guid: 3f44606f688bbfd4195ad90f46b6c1e0, type: 2}
+  - {fileID: 11400000, guid: 24a2a067c4655bb4cbd02f0852058a17, type: 2}

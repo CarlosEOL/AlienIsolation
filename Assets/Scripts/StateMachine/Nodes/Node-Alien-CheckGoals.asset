@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Node-Alien-CheckGoals
   m_EditorClassIdentifier: Assembly-CSharp::StateMachine.CheckGoalNode
   IdleNode: {fileID: 11400000, guid: 96dd660d0ffc5b34ab806ae0b37d39d0, type: 2}
-  HuntNode: {fileID: 11400000, guid: 14b4876d6d502864e8d43d316ae5cbfe, type: 2}
+  HuntNode: {fileID: 11400000, guid: b6b6308218909394ab8c407c206c68fd, type: 2}
   PursueNode: {fileID: 11400000, guid: d26a396abe4136b489dbe50554dfebd9, type: 2}
   WanderNode: {fileID: 11400000, guid: cdf17cc811280bf44b2f1b23a94a2ea9, type: 2}

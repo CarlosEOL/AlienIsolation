@@ -16,5 +16,7 @@ MonoBehaviour:
   speedSmoothing: 3
   destinationUpdateThreshold: 0.5
   runRadius: 8
-  flockRadius: 2.5
-  stopRadius: 1.1
+  flockRadius: 2
+  flockExitRadius: 6
+  stopRadius: 1.2
+  stopExitRadius: 2

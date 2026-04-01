@@ -229,7 +229,7 @@ public class Controller : MonoBehaviour
         
         if (other.TryGetComponent(out NPC npc) && EnlistedNPC.Count < MaxRecruitmentAmount)
         {
-            Debug.Log("NPC in Range.");
+            Debug.Log("An NPC in Range.");
             if (!npc.canFlock) return;
             if (npc.currentGoals == IStateAndGoals.NPCGoals.Protect) return;
             

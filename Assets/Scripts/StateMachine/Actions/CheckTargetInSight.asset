@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: CheckTargetInSight
   m_EditorClassIdentifier: Assembly-CSharp::StateMachine.ConditionNode
   npcMethodCallback: HasTargetInSight
-  TrueNode: {fileID: 11400000, guid: da945e02d69461645b1861a60e722886, type: 2}
+  TrueNode: {fileID: 11400000, guid: 5bce915e19a8ec540b78d9cc265730df, type: 2}
   FalseNode: {fileID: 11400000, guid: 9592baac8391f8747a25675ec949f24c, type: 2}

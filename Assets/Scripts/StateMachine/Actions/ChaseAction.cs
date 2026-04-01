@@ -8,54 +8,21 @@ namespace StateMachine
     {
         public override NodeStatus Execute(NPC npc)
         {
-            if (npc.Target.CompareTag("Friendly"))
-            {
-                if (npc.HasTargetInsight())
-                {
-                    npc.agent.SetDestination(npc.Target.position);
+            if (npc.Target == null) return NodeStatus.Failure;
 
-                    if (npc.CheckIsInTargetRange())
-                    {
-                        npc.currentState = IStateAndGoals.NPCState.Attack;
-                        return NodeStatus.Success;
-                    }
-                
-                    return NodeStatus.Running;
-                }
-            }
-            
-            if (npc.Target.CompareTag("Player"))
+            if (npc.HasTargetInSight())
             {
-                if (npc.HasTargetInsight())
-                {
-                    npc.agent.SetDestination(npc.Target.position);
+                npc.agent.SetDestination(npc.Target.position);
 
-                    if (npc.CheckIsInTargetRange())
-                    {
-                        npc.currentState = IStateAndGoals.NPCState.Attack;
-                        return NodeStatus.Success;
-                    }
-                
-                    return NodeStatus.Running;
-                }
-            }
-            
-            if (npc.Target.CompareTag("Enemy"))
-            {
-                if (npc.HasTargetInsight())
+                if (npc.CheckIsInTargetRange())
                 {
-                    npc.agent.SetDestination(npc.Target.position);
-
-                    if (npc.CheckIsInTargetRange())
-                    {
-                        npc.currentState = IStateAndGoals.NPCState.Attack;
-                        return NodeStatus.Success;
-                    }
-                
-                    return NodeStatus.Running;
+                    npc.currentState = IStateAndGoals.NPCState.Attack;
+                    return NodeStatus.Success;
                 }
+
+                return NodeStatus.Running;
             }
-            
+
             return NodeStatus.Failure;
         }
     }

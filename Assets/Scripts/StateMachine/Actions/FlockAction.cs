@@ -11,9 +11,14 @@ namespace StateMachine
         [SerializeField] private float destinationUpdateThreshold = 0.5f;
 
         [Header("Zones")]
-        [SerializeField] private float runRadius = 10f;    // beyond this = run
-        [SerializeField] private float flockRadius = 5f;   // within this = match velocity
-        [SerializeField] private float stopRadius = 1.5f;  // within this = stop
+        [SerializeField] private float runRadius = 10f;
+        [SerializeField] private float flockRadius = 5f;
+        [SerializeField] private float flockExitRadius = 6f;    // must go further out to exit flock zone
+        [SerializeField] private float stopRadius = 1.5f;
+        [SerializeField] private float stopExitRadius = 2f;     // must go further out to exit stop zone
+
+        private bool _isFlocking = false;
+        private bool _isStopped = false;
 
         public override NodeStatus Execute(NPC npc)
         {
@@ -23,32 +28,36 @@ namespace StateMachine
             Vector3 targetVelocity = npc.targetLinearVelocity;
             float distanceToTarget = Vector3.Distance(npc.transform.position, targetPosition);
 
-            // --- Zone 3: Too close, stop immediately ---
-            if (distanceToTarget < stopRadius)
+            // Update zone states with hysteresis
+            if (!_isStopped && distanceToTarget < stopRadius)       _isStopped = true;
+            if (_isStopped && distanceToTarget > stopExitRadius)    _isStopped = false;
+
+            if (!_isFlocking && distanceToTarget < flockRadius)     _isFlocking = true;
+            if (_isFlocking && distanceToTarget > flockExitRadius)  _isFlocking = false;
+
+            // --- Zone 3: Stop ---
+            if (_isStopped)
             {
-               
                 npc.agent.speed = 0f;
                 npc.agent.SetDestination(npc.transform.position);
                 npc.IsRunning = false;
-                
                 return NodeStatus.Running;
             }
 
-            // --- Zone 2: Flock zone, match velocity ---
-            if (distanceToTarget < flockRadius)
+            // --- Zone 2: Flock ---
+            if (_isFlocking)
             {
                 npc.IsRunning = false;
-                Vector3 predictedDestination = targetPosition + (targetVelocity * lookaheadTime) + npc.CalculateSepereationOffset();
+                Vector3 predictedDestination = targetPosition + (targetVelocity * lookaheadTime) + npc.CalculateSeparationOffset();
 
                 if (Vector3.Distance(npc.agent.destination, predictedDestination) > destinationUpdateThreshold)
                     npc.agent.SetDestination(predictedDestination);
 
-                // Smoothly match target speed
                 npc.agent.speed = Mathf.Lerp(npc.agent.speed, targetVelocity.magnitude, Time.deltaTime * speedSmoothing);
                 return NodeStatus.Running;
             }
 
-            // --- Zone 1: Run to target ---
+            // --- Zone 1: Run or walk ---
             if (distanceToTarget > runRadius)
             {
                 npc.IsRunning = true;
@@ -56,12 +65,11 @@ namespace StateMachine
             }
             else
             {
-                // Between flockRadius and runRadius - walk
                 npc.IsRunning = false;
                 npc.agent.speed = npc.walkSpeed;
             }
 
-            Vector3 destination = targetPosition + npc.CalculateSepereationOffset();
+            Vector3 destination = targetPosition + npc.CalculateSeparationOffset();
             if (Vector3.Distance(npc.agent.destination, destination) > destinationUpdateThreshold)
                 npc.agent.SetDestination(destination);
 

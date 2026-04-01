@@ -39,26 +39,26 @@ namespace NPCs
                 _currentTarget = value;
                 Debug.Log($"Target Changed to {_currentTarget.name} for NPC {name}");
                 OnTargetChanged?.Invoke(_currentTarget);
+                
+                SetAgentToDefault();
 
                 if (_currentTarget.TryGetComponent(out Controller _))
                 {
-                    targetLinearVelocity = Controller._linearVelocity;
-                    SetAgentToFlocking();
-                }
-                else
-                {
-                    SetAgentToDefault();
+                    if (!isEnemy)
+                    {
+                        targetLinearVelocity = Controller._linearVelocity;
+                        SetAgentToFlocking();
+                    }
                 }
 
 
                 if (_currentTarget.TryGetComponent(out NavMeshAgent a))
                 {
-                    targetLinearVelocity = a.velocity;
-                    SetAgentToFlocking();
-                }
-                else
-                {
-                    SetAgentToDefault();
+                    if (!isEnemy)
+                    {
+                        targetLinearVelocity = a.velocity;
+                        SetAgentToFlocking();
+                    }
                 }
             }
         }
@@ -91,6 +91,10 @@ namespace NPCs
         [SerializeField] public int MaxRecruitmentAmt = 3;
         [SerializeField] public List<NPC> EnlistedNPC = new();
         private int _currentRecruitmentAmt = 0;
+        
+        private Collider[] _cachedNeighbors = new Collider[0];
+        private float _separationUpdateTimer = 0f;
+        [SerializeField] private float separationUpdateInterval = 0.2f;
         
         private void Awake()
         {
@@ -168,9 +172,9 @@ namespace NPCs
             _pointsOfInterests.RemoveAt(index);
         }
 
-        public bool HasTargetInsight()
+        public bool HasTargetInSight()
         {
-            return IsTargetInCone(this.transform, Target, 10f, 65f);
+            return IsTargetInCone(transform, 15f, 60f);
         }
 
         public bool CheckIsInTargetRange()
@@ -195,12 +199,17 @@ namespace NPCs
             currentState = IStateAndGoals.NPCState.Pursue;
         }
 
-        public Vector3 CalculateSepereationOffset()
+        public Vector3 CalculateSeparationOffset()
         {
-            // Separation offset
+            _separationUpdateTimer -= Time.deltaTime;
+            if (_separationUpdateTimer <= 0f)
+            {
+                _cachedNeighbors = Physics.OverlapSphere(transform.position, separationRadius);
+                _separationUpdateTimer = separationUpdateInterval;
+            }
+
             Vector3 separationOffset = Vector3.zero;
-            Collider[] neighbors = Physics.OverlapSphere(transform.position, separationRadius);
-            foreach (Collider neighbor in neighbors)
+            foreach (Collider neighbor in _cachedNeighbors)
             {
                 if (neighbor.gameObject == gameObject) continue;
                 if (!neighbor.TryGetComponent<NPC>(out _)) continue;
@@ -208,29 +217,34 @@ namespace NPCs
                 Vector3 awayFromNeighbor = transform.position - neighbor.transform.position;
                 float distance = awayFromNeighbor.magnitude;
                 if (distance > 0)
-                    separationOffset += awayFromNeighbor.normalized / distance; // closer = stronger push
+                    separationOffset += awayFromNeighbor.normalized / distance;
             }
-            return separationOffset *= separationStrength;
+
+            return separationOffset * separationStrength;
         }
         
-        public bool IsTargetInCone(Transform npc, Transform target, float maxDist, float maxAngle)
+        private bool IsTargetInCone(Transform npc, float maxDist, float maxAngle)
         {
-            Vector3 dirToTarget = (target.position - npc.position).normalized;
-            float distance = Vector3.Distance(npc.position, target.position);
-
-            if (distance < maxDist)
+            int rayCount = 5;
+            for (int i = 0; i < rayCount; i++)
             {
-                // Check if target is within the FOV angle
-                if (Vector3.Angle(npc.forward, dirToTarget) < maxAngle / 2)
+                float t = rayCount == 1 ? 0.5f : (float)i / (rayCount - 1);
+                float angle = Mathf.Lerp(-maxAngle / 2, maxAngle / 2, t);
+                Vector3 rayDir = Quaternion.AngleAxis(angle, npc.up) * npc.forward;
+
+                if (Physics.Raycast(npc.position, rayDir, out RaycastHit hit, maxDist))
                 {
-                    // Raycast to check for walls/obstacles
-                    if (!Physics.Linecast(npc.position, target.position, layerMask: target.gameObject.layer))
-                    {
-                        Debug.Log("I SEE YOU!");
-                        return true; // Detected!
-                    }
+                    if (hit.collider.gameObject.layer == 8) continue;
+
+                    if (!isEnemy && CheckTargetTag(hit.collider.gameObject)) continue;
+                    if (isEnemy && !CheckTargetTag(hit.collider.gameObject)) continue;
+
+                    Target = hit.transform;
+                    currentState = IStateAndGoals.NPCState.Pursue;
+                    return true;
                 }
             }
+
             return false;
         }
 
@@ -239,17 +253,17 @@ namespace NPCs
             
         }
 
-        // if target is player or friendly return
-        public bool CheckTargetTag()
+        // if target is player or friendly return true
+        public bool CheckTargetTag(GameObject targetTag)
         {
-            if (Target.CompareTag("Player") || Target.CompareTag("Friendly")) return true;
+            if (targetTag.CompareTag("Player") || targetTag.CompareTag("Friendly")) return true;
             return false;
         }
 
         void SetAgentToFlocking()
         {
             agent.autoBraking = false;
-            agent.stoppingDistance = 0f;
+            agent.stoppingDistance = 0.1f;
             agent.angularSpeed = 70f;
             agent.acceleration = 18f;
         }

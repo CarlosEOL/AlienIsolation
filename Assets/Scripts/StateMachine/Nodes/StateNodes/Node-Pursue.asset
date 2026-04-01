@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98a2a4878ef24521ba95c6f14a139894, type: 3}
   m_Name: Node-Pursue
   m_EditorClassIdentifier: Assembly-CSharp::StateMachine.ParallelNode
-  children: []
+  children:
+  - {fileID: 11400000, guid: 3f44606f688bbfd4195ad90f46b6c1e0, type: 2}

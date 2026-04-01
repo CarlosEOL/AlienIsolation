@@ -15,7 +15,6 @@ namespace StateMachine.Nodes
             while (currentIndex < children.Count)
             {
                 NodeStatus status = children[currentIndex].Execute(npc);
-                Debug.Log(status.ToString());
         
                 if (status == NodeStatus.Running) return NodeStatus.Running;
                 if (status == NodeStatus.Failure)
@@ -25,6 +24,7 @@ namespace StateMachine.Nodes
                 }
         
                 currentIndex++;
+                if  (currentIndex >= children.Count) currentIndex = 0;
             }
     
             currentIndex = 0;

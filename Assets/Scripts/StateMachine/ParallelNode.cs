@@ -11,26 +11,16 @@ namespace StateMachine
 
         public override NodeStatus Execute(NPC npc) 
         {
-            bool anyChildRunning = false;
-            int successCount = 0;
+            int runningCount = 0;
 
-            foreach (var child in children) 
+            foreach (Node child in children)
             {
                 NodeStatus status = child.Execute(npc);
-
-                if (status == NodeStatus.Failure) 
-                    return NodeStatus.Failure;
-            
-                if (status == NodeStatus.Running) 
-                    anyChildRunning = true;
-            
-                if (status == NodeStatus.Success) 
-                    successCount++;
+                if (status == NodeStatus.Failure) return NodeStatus.Failure;
+                if (status == NodeStatus.Running) runningCount++;
             }
 
-            Debug.Log("Successfully executed " + successCount + " nodes");
-            // If at least one child is still working, the whole Parallel node is 'Running'
-            return anyChildRunning ? NodeStatus.Running : NodeStatus.Success;
+            return runningCount > 0 ? NodeStatus.Running : NodeStatus.Success;
         }
     }
 }
