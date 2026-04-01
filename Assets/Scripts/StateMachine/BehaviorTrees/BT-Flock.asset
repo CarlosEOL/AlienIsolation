@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c2165670f1aa18499fac5ece6ff3cb1, type: 3}
   m_Name: BT-Flock
   m_EditorClassIdentifier: Assembly-CSharp::StateMachine.BehaviourTree
-  name: 
-  description: 
-  PrimaryNode: {fileID: 0}
-  CanRepeat: 0
+  name: Pure Flock Method
+  description: Oh yeah
+  PrimaryNode: {fileID: 11400000, guid: f3b8ac11080af3a4d9c25b60e3cc0ed3, type: 2}
+  CanRepeat: 1

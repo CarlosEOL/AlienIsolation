@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea027a4189af4f7eabbcfd1bb1ad3994, type: 3}
+  m_Name: Flock
+  m_EditorClassIdentifier: Assembly-CSharp::StateMachine.FlockAction
+  lookaheadTime: 0.5
+  separationRadius: 2
+  separationStrength: 1.5
+  arrivalRadius: 1.5
+  speedSmoothing: 3
+  destinationUpdateThreshold: 0.5
+  healRadius: 2
+  healAmount: 20
+  healCooldown: 60
+  healThreshold: 90
+  healthItemPrefab: {fileID: 7236685372407916431, guid: f3273ec106fe50d42b85307b42df196a, type: 3}

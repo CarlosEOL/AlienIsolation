@@ -4,26 +4,7 @@ namespace NPCs
 {
     public class Enemy : NPC
     {
-        public bool IsPlayerInCone(Transform npc, Transform player, float maxDist, float maxAngle)
-        {
-            Vector3 directionToPlayer = (player.position - npc.position).normalized;
-            float distance = Vector3.Distance(npc.position, player.position);
-
-            if (distance < maxDist)
-            {
-                // Check if player is within the FOV angle
-                if (Vector3.Angle(npc.forward, directionToPlayer) < maxAngle / 2)
-                {
-                    // Raycast to check for walls/obstacles
-                    if (!Physics.Linecast(npc.position, player.position, layerMask: player.gameObject.layer))
-                    {
-                        Debug.Log("I SEE YOU!");
-                        return true; // Detected!
-                    }
-                }
-            }
-            return false;
-        }
+        
         
         
         private void OnDrawGizmos()

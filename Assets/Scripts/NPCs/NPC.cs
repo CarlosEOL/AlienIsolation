@@ -15,23 +15,35 @@ namespace NPCs
         [SerializeField] public float walkSpeed;
         [SerializeField] public float runSpeed;
         
-        [SerializeField] bool canMove = true;
-        [SerializeField] bool isEnemy = false;
-        [SerializeField] bool canFlock = true;
+        [SerializeField] public bool canMove = true;
+        [SerializeField] public bool isEnemy = false;
+        [SerializeField] public bool isLeader = false;
+        [SerializeField] public bool canFlock = true;
         [SerializeField] public IStateAndGoals.NPCGoals currentGoals = IStateAndGoals.NPCGoals.Protect;
         [SerializeField] public IStateAndGoals.NPCState currentState = IStateAndGoals.NPCState.Idle;
         
         [SerializeField] BehaviourTree defaultBehaviorTree;
-        [SerializeField] BehaviourTree flockBehaviorTree;
+        [SerializeField] BehaviourTree flockBehaviors;
+        
+        [SerializeField] private float separationRadius = 2f;
+        [SerializeField] private float separationStrength = 1.5f;
 
         private Transform _currentTarget;
+        public Vector3 TargetLinearVelocity = Vector3.zero;
         public Transform Target
         {
             get => _currentTarget;
             set
             {
                 _currentTarget = value;
+                Debug.Log($"Target Changed to {_currentTarget.name} for NPC {name}");
                 OnTargetChanged?.Invoke(_currentTarget);
+                
+                if (_currentTarget.TryGetComponent(out Controller _))
+                    TargetLinearVelocity = Controller._linearVelocity;
+                
+                if (_currentTarget.TryGetComponent(out NavMeshAgent a))
+                    TargetLinearVelocity = a.velocity;
             }
         }
 
@@ -63,6 +75,11 @@ namespace NPCs
         public Action<bool> OnValueChanged;
         public Action<Transform> OnTargetChanged;
         
+        [Header("Flocking Related Settings")]
+        [SerializeField] public int MaxRecruitmentAmt = 3;
+        [SerializeField] public List<NPC> EnlistedNPC = new();
+        private int _currentRecruitmentAmt = 0;
+        
         private void Awake()
         {
             //Checksum for value change: if isRunning, speed change to run. if Target is a player or a distraction, it isRunning.
@@ -72,7 +89,7 @@ namespace NPCs
             agent.enabled = true;
             
             defaultBehaviorTree = Instantiate(defaultBehaviorTree);
-            flockBehaviorTree = Instantiate(flockBehaviorTree);
+            flockBehaviors = Instantiate(flockBehaviors);
             
             Target = transform;
 
@@ -83,9 +100,9 @@ namespace NPCs
         void Update() 
         {
             if (currentGoals == IStateAndGoals.NPCGoals.Idle) return;
-            if (currentGoals == IStateAndGoals.NPCGoals.Protect)
+            if (currentGoals == IStateAndGoals.NPCGoals.Protect && canMove)
             {
-                flockBehaviorTree.Tick(this);
+                flockBehaviors.Tick(this);
                 return;
             }
             
@@ -141,9 +158,7 @@ namespace NPCs
 
         protected virtual bool HasTargetInsight()
         {
-            
-            
-            return false;
+            return IsTargetInCone(this.transform, Target, 10f, 65f);
         }
 
         public virtual bool CheckIsInTargetRange()
@@ -165,7 +180,58 @@ namespace NPCs
         {
             Debug.Log($"Added {name} to Party!");
             currentGoals = IStateAndGoals.NPCGoals.Protect;
-            Target = controller.transform;
+            currentState = IStateAndGoals.NPCState.Pursue;
+        }
+
+        public Vector3 CalculateSepereationOffset()
+        {
+            // Separation offset
+            Vector3 separationOffset = Vector3.zero;
+            Collider[] neighbors = Physics.OverlapSphere(transform.position, separationRadius);
+            foreach (Collider neighbor in neighbors)
+            {
+                if (neighbor.gameObject == gameObject) continue;
+                if (!neighbor.TryGetComponent<NPC>(out _)) continue;
+
+                Vector3 awayFromNeighbor = transform.position - neighbor.transform.position;
+                float distance = awayFromNeighbor.magnitude;
+                if (distance > 0)
+                    separationOffset += awayFromNeighbor.normalized / distance; // closer = stronger push
+            }
+            return separationOffset *= separationStrength;
+        }
+        
+        public bool IsTargetInCone(Transform npc, Transform target, float maxDist, float maxAngle)
+        {
+            Vector3 dirToTarget = (target.position - npc.position).normalized;
+            float distance = Vector3.Distance(npc.position, target.position);
+
+            if (distance < maxDist)
+            {
+                // Check if target is within the FOV angle
+                if (Vector3.Angle(npc.forward, dirToTarget) < maxAngle / 2)
+                {
+                    // Raycast to check for walls/obstacles
+                    if (!Physics.Linecast(npc.position, target.position, layerMask: target.gameObject.layer))
+                    {
+                        Debug.Log("I SEE YOU!");
+                        return true; // Detected!
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void OnDestroy()
+        {
+            if (Target.TryGetComponent(out Controller controller))
+            {
+                controller.EnlistedNPC.Remove(this);
+            }
+            if (Target.TryGetComponent(out NPC npc))
+            {
+                npc.EnlistedNPC.Remove(this);
+            }
         }
     }
 }

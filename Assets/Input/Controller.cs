@@ -1,23 +1,26 @@
 
+using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Interactable;
+using NPCs;
+using StateMachine;
 
 [RequireComponent(typeof(PlayerInputs))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
 public class Controller : MonoBehaviour
 {
-    [Header("Player Settings")]
     PlayerInputs _inputs;
-    
     [SerializeField] new Camera camera;
     [SerializeField] Rigidbody rb;
     [SerializeField] TogglePerspective togglePerspective;
     [SerializeField] Transform cameraTarget;
     [SerializeField] TMP_Text txt;
-
+    
+    [Header("Player Settings")]
     [SerializeField]bool canJump = true;
     [SerializeField]private float speed;
     [SerializeField]private float turnSpeed;
@@ -32,6 +35,7 @@ public class Controller : MonoBehaviour
     private float _xRotation;
 
     private bool _isRunning;
+    public static Vector3 _linearVelocity = Vector3.zero;
     
     [Header("Interactable Settings")]
     LayerMask _layerMask;
@@ -43,13 +47,29 @@ public class Controller : MonoBehaviour
     
     [SerializeField] public AudioSource audioClip;
 
-    [Header("NPC Recruitment Settings")] [SerializeField]
-    private int RecruitmentAmount = 5;
+    [Header("NPC Recruitment Settings")] 
+    [SerializeField] private int MaxRecruitmentAmount = 5;
+    [SerializeField] public List<NPC> EnlistedNPC = new();
+
+    [Header("Gameplay Settings")] 
+    [SerializeField] public float MaxHealth = 100f;
+    private float _currentHealth;
+    
+    public static Controller Instance { get; private set; }
 
     private void Awake()
     {
+        if (Instance && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        
         _inputs = new PlayerInputs();
         _layerMask = LayerMask.GetMask("Interactable");
+        _currentHealth = MaxHealth;
     }
 
     private void OnEnable()
@@ -87,7 +107,6 @@ public class Controller : MonoBehaviour
                 {
                     _currentInteractables = _hit.transform.GetComponent<Interactables>();
                     _currentInteractables.Interact(this);
-                    Debug.Log($"Is hiding: {isHiding}");
                 }
             }
             
@@ -106,12 +125,7 @@ public class Controller : MonoBehaviour
     {
         _inputs.Disable();
     }
-
-    private void Update()
-    {
-        //Debug.Log($"X: {x}, Y: {y}");
-    }
-
+    
     private void FixedUpdate()
     {
         // Handles in-world movement
@@ -176,8 +190,9 @@ public class Controller : MonoBehaviour
         // Calculate move direction based on inputs (assuming moveInputX/Y are move axes)
         Vector3 moveDir = (forward * y) + (right * x);
         float currentSpeed = _isRunning ? speed * 2f : speed;
+        _linearVelocity = moveDir * currentSpeed * Time.deltaTime;
         
-        rb.MovePosition(rb.position + moveDir * currentSpeed * Time.deltaTime);
+        rb.MovePosition(rb.position + _linearVelocity);
     }
 
     private void OnCollisionEnter(Collision other)
@@ -205,5 +220,27 @@ public class Controller : MonoBehaviour
             _hit = new RaycastHit();
             txt.enabled = false;
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.isTrigger) return;
+        
+        if (other.TryGetComponent(out NPC npc) && EnlistedNPC.Count < MaxRecruitmentAmount)
+        {
+            Debug.Log("NPC in Range.");
+            if (!npc.canFlock) return;
+
+            Debug.Log("Adding NPC to Rank.");
+            npc.Target = transform;
+            npc.Interact(this);
+            EnlistedNPC.Add(npc);
+        }
+    }
+
+    public void AddHealth(float amount)
+    {
+        if (_currentHealth + amount > MaxHealth) _currentHealth = MaxHealth;
+        else _currentHealth += amount;
     }
 }

@@ -7,6 +7,8 @@ TagManager:
   - Ground
   - Wall
   - Interactable
+  - Friendly
+  - Enemy
   layers:
   - Default
   - TransparentFX
