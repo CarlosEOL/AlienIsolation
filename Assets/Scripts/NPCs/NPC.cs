@@ -248,9 +248,9 @@ namespace NPCs
             return false;
         }
 
-        public void Attack()
+        public virtual void Attack()
         {
-            
+            Debug.Log("Doing Attack Logic.");
         }
 
         // if target is player or friendly return true

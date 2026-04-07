@@ -1,3 +1,5 @@
+
+using System;
 using UnityEngine;
 
 namespace NPCs
@@ -17,12 +19,24 @@ namespace NPCs
 
             Gizmos.DrawRay(pos, leftBoundary * viewDistance);
             Gizmos.DrawRay(pos, rightBoundary * viewDistance);
-
-            // Optional: Draw a wire arc to connect the rays
+            
 #if UNITY_EDITOR
             UnityEditor.Handles.color = new Color(1, 1, 0, 0.1f); // Semi-transparent yellow
             UnityEditor.Handles.DrawSolidArc(pos, Vector3.up, leftBoundary, viewAngle, viewDistance);
 #endif
+        }
+
+        public void Attack(Controller ply)
+        {
+            base.Attack();
+        }
+
+        private void OnTriggerStay(Collider other)
+        {
+            if (other.gameObject.CompareTag("Player"))
+            {
+                Attack(other.GetComponent<Controller>());
+            }
         }
     }
 
