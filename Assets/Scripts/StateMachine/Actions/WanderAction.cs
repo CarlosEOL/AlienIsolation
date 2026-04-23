@@ -13,8 +13,8 @@ namespace StateMachine
             Debug.Log("WANDER WANDER!!");
             if (npc.Target == null)
             {
-                Debug.Log("Wander FAILED!");
-                return NodeStatus.Failure;
+                npc.ChangeTarget();
+                return NodeStatus.Running;
             }
             
             if (npc.Target != null && !npc.CheckTargetTag(npc.Target.gameObject))

@@ -7,6 +7,7 @@ namespace StateMachine
     [CreateAssetMenu(fileName = "Node", menuName = "State Machine/Node")]
     public abstract class Node : ScriptableObject, IAction
     {
+        public virtual void Reset() { }
         public abstract NodeStatus Execute(NPC npc);
     }
 }

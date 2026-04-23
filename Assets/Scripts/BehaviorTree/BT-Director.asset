@@ -32,8 +32,8 @@ MonoBehaviour:
           rid: 1990654110424105063
         BlackboardGroupReferences: []
         Root:
-          rid: 1990654110424105104
-        m_VersionTimestamp: 639093579628136494
+          rid: 2914153492013645825
+        m_VersionTimestamp: 639111734690126037
     - rid: 1990654110424105063
       type: {class: BlackboardReference, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -44,9 +44,10 @@ MonoBehaviour:
       type: {class: Blackboard, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         m_Variables:
-        - rid: 1990654110424105106
-        - rid: 1990654110424105107
-    - rid: 1990654110424105104
+        - rid: 2914153492013645827
+        - rid: 2914153492013645828
+        - rid: 2914153492013645829
+    - rid: 2914153492013645825
       type: {class: Start, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -57,10 +58,10 @@ MonoBehaviour:
         m_Parent:
           rid: -2
         m_Child:
-          rid: 1990654110424105105
+          rid: 2914153492013645826
         Repeat: 1
         AllowMultipleRepeatsPerTick: 0
-    - rid: 1990654110424105105
+    - rid: 2914153492013645826
       type: {class: WaitAction, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -69,10 +70,10 @@ MonoBehaviour:
         Graph:
           rid: 1990654110424105062
         m_Parent:
-          rid: 1990654110424105104
+          rid: 2914153492013645825
         SecondsToWait:
-          rid: 1990654110424105108
-    - rid: 1990654110424105106
+          rid: 2914153492013645830
+    - rid: 2914153492013645827
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -80,7 +81,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 0}
-    - rid: 1990654110424105107
+    - rid: 2914153492013645828
       type: {class: 'BlackboardVariable`1[[NotifyAlien, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -88,7 +89,15 @@ MonoBehaviour:
           m_Value1: 13779370659735906765
         Name: New NotifyAlien
         m_Value: {fileID: 0}
-    - rid: 1990654110424105108
+    - rid: 2914153492013645829
+      type: {class: 'BlackboardVariable`1[[StateMachine.FlockAction, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 7863341241740479738
+          m_Value1: 3626398153155077023
+        Name: New Flock Action
+        m_Value: {fileID: 0}
+    - rid: 2914153492013645830
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -108,14 +117,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c02bb70996b49eba31d0c206e28da24, type: 3}
   m_Name: BT-Director Blackboard
   m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.RuntimeBlackboardAsset
-  VersionTimestamp: 639093579612671879
+  VersionTimestamp: 639111734685887403
   AssetID:
-    m_Value0: 0
-    m_Value1: 0
+    m_Value0: 15347796642822643091
+    m_Value1: 17479568437244601144
   m_Blackboard:
     m_Variables:
     - rid: 1990654110424105067
     - rid: 1990654110424105109
+    - rid: 2914153492013645831
   m_SharedBlackboardVariableGuids: []
   references:
     version: 2
@@ -136,6 +146,14 @@ MonoBehaviour:
           m_Value1: 13779370659735906765
         Name: New NotifyAlien
         m_Value: {fileID: 0}
+    - rid: 2914153492013645831
+      type: {class: 'BlackboardVariable`1[[StateMachine.FlockAction, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 7863341241740479738
+          m_Value1: 3626398153155077023
+        Name: New Flock Action
+        m_Value: {fileID: 0}
 --- !u!114 &-1981524232180533213
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -149,12 +167,13 @@ MonoBehaviour:
   m_Name: BT-Director Blackboard
   m_EditorClassIdentifier: Unity.Behavior.Authoring::Unity.Behavior.BehaviorBlackboardAuthoringAsset
   AssetID:
-    m_Value0: 0
-    m_Value1: 0
+    m_Value0: 15347796642822643091
+    m_Value1: 17479568437244601144
   m_Variables:
   - rid: 1990654110424105068
   - rid: 1990654110424105103
-  m_VersionTimestamp: 639093579612671879
+  - rid: 2914153492013645824
+  m_VersionTimestamp: 639111734685887403
   m_CommandBuffer:
     m_Commands: []
   m_RuntimeBlackboardAsset: {fileID: -8129838897738497270}
@@ -181,6 +200,16 @@ MonoBehaviour:
         IsExposed: 1
         m_IsShared: 0
         m_Value: {fileID: 0}
+    - rid: 2914153492013645824
+      type: {class: 'TypedVariableModel`1[[StateMachine.FlockAction, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 7863341241740479738
+          m_Value1: 3626398153155077023
+        Name: New Flock Action
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: {fileID: 0}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,7 +227,7 @@ MonoBehaviour:
   m_Nodes:
   - rid: 1990654110424105069
   - rid: 1990654110424105071
-  m_VersionTimestamp: 639093579628136494
+  m_VersionTimestamp: 639111734690126037
   m_SerializedVersion: 2
   m_DebugInfo: {fileID: 1407269795166415735}
   m_RuntimeGraph: {fileID: -8660224350032598258}

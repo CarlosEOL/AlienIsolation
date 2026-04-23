@@ -27,7 +27,13 @@ namespace StateMachine
         {
             if (PrimaryNode != null) 
             {
-                PrimaryNode.Execute(npc);
+                NodeStatus status = PrimaryNode.Execute(npc);
+                
+                if (CanRepeat && status != NodeStatus.Running)
+                {
+                    // Reset and rerun from top next tick
+                    PrimaryNode.Reset(); 
+                }
             }
         }
     }

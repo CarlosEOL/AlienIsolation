@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Interactable;
 using StateMachine;
 using UnityEngine;
-using UnityEngine.AdaptivePerformance.Basic;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
@@ -37,6 +36,12 @@ namespace NPCs
             set
             {
                 _currentTarget = value;
+                if (_currentTarget == null)
+                {
+                    OnTargetChanged?.Invoke(null);
+                    SetAgentToDefault();
+                    return;
+                }
                 Debug.Log($"Target Changed to {_currentTarget.name} for NPC {name}");
                 OnTargetChanged?.Invoke(_currentTarget);
                 
@@ -96,10 +101,15 @@ namespace NPCs
         private float _separationUpdateTimer = 0f;
         [SerializeField] private float separationUpdateInterval = 0.2f;
         
+        protected virtual void OnTargetDetected(Transform detectedTarget) { }
+        
         private void Awake()
         {
             //Checksum for value change: if isRunning, speed change to run. if Target is a player or a distraction, it isRunning.
-            OnTargetChanged = currentTarget => { IsRunning = currentTarget.gameObject.CompareTag("Player"); };
+            OnTargetChanged = currentTarget => { 
+                if (currentTarget == null) { IsRunning = false; return; }
+                IsRunning = currentTarget.gameObject.CompareTag("Player"); 
+            };
             OnValueChanged = isItRunning => { agent.speed = isItRunning ? runSpeed : walkSpeed; };
             
             agent.enabled = true;
@@ -174,12 +184,13 @@ namespace NPCs
 
         public bool HasTargetInSight()
         {
-            return IsTargetInCone(transform, 15f, 60f);
+            if (Target == null) return false;
+            return IsTargetInCone(transform, 15f, 65f);
         }
 
         public bool CheckIsInTargetRange()
         {
-            if (Vector3.Distance(transform.position, Target.position) < 0.8f)
+            if (Vector3.Distance(transform.position, Target.position) < 1.5f)
             {
                 return true;
             }
@@ -225,6 +236,8 @@ namespace NPCs
         
         private bool IsTargetInCone(Transform npc, float maxDist, float maxAngle)
         {
+            if (Target ==null) return false;
+            
             int rayCount = 5;
             for (int i = 0; i < rayCount; i++)
             {
@@ -239,7 +252,8 @@ namespace NPCs
                     if (!isEnemy && CheckTargetTag(hit.collider.gameObject)) continue;
                     if (isEnemy && !CheckTargetTag(hit.collider.gameObject)) continue;
 
-                    Target = hit.transform;
+                    if (Target != hit.transform) Target = hit.transform;
+                    OnTargetDetected(hit.transform); // notify subclass - For friendlies if they want to attack enemies while following the player
                     currentState = IStateAndGoals.NPCState.Pursue;
                     return true;
                 }
@@ -250,7 +264,7 @@ namespace NPCs
 
         public virtual void Attack()
         {
-            Debug.Log("Doing Attack Logic.");
+            Debug.Log($"{name} is doing Attack Logic on {Target.name}.");
         }
 
         // if target is player or friendly return true
@@ -278,6 +292,8 @@ namespace NPCs
 
         private void OnDestroy()
         {
+            if (Target == null) return;
+            
             if (Target.TryGetComponent(out Controller controller))
             {
                 controller.EnlistedNPC.Remove(this);

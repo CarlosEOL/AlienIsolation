@@ -18,29 +18,23 @@ namespace StateMachine
             {
                 case IStateAndGoals.NPCGoals.Idle:
                     npc.currentState = IStateAndGoals.NPCState.Idle;
-                    IdleNode.Execute(npc);
-                    break;
+                    return IdleNode.Execute(npc);
                 
                 case IStateAndGoals.NPCGoals.FindAndKill:
                     npc.currentState = IStateAndGoals.NPCState.Hunt;
-                    HuntNode.Execute(npc);
-                    Debug.Log($"{npc.name} has Started to HUNT!");
-                    break;
-                
+                    return HuntNode.Execute(npc);
+                    
                 case IStateAndGoals.NPCGoals.Lead:
                     npc.currentState = IStateAndGoals.NPCState.Hunt;
-                    HuntNode.Execute(npc);
-                    break;
+                    return HuntNode.Execute(npc);
                 
                 case IStateAndGoals.NPCGoals.Protect:
                     npc.currentState = IStateAndGoals.NPCState.Pursue;
-                    PursueNode.Execute(npc);
-                    break;
+                    return PursueNode.Execute(npc);
                 
                 case IStateAndGoals.NPCGoals.Wander:
                     npc.currentState = IStateAndGoals.NPCState.Wander;
-                    WanderNode.Execute(npc);
-                    break;
+                    return WanderNode.Execute(npc);
             }
             
             return NodeStatus.Running;

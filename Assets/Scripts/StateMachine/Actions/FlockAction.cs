@@ -14,7 +14,7 @@ namespace StateMachine
         [SerializeField] private float runRadius = 10f;
         [SerializeField] private float flockRadius = 5f;
         [SerializeField] private float flockExitRadius = 6f;    // must go further out to exit flock zone
-        [SerializeField] private float stopRadius = 1.5f;
+        [SerializeField] private float stopRadius = 1f;
         [SerializeField] private float stopExitRadius = 2f;     // must go further out to exit stop zone
 
         private bool _isFlocking = false;
@@ -35,7 +35,7 @@ namespace StateMachine
             if (!_isFlocking && distanceToTarget < flockRadius)     _isFlocking = true;
             if (_isFlocking && distanceToTarget > flockExitRadius)  _isFlocking = false;
 
-            // --- Zone 3: Stop ---
+            // Zone 3: Stop
             if (_isStopped)
             {
                 npc.agent.speed = 0f;
@@ -44,7 +44,7 @@ namespace StateMachine
                 return NodeStatus.Running;
             }
 
-            // --- Zone 2: Flock ---
+            // Zone 2: Flock
             if (_isFlocking)
             {
                 npc.IsRunning = false;
@@ -57,7 +57,7 @@ namespace StateMachine
                 return NodeStatus.Running;
             }
 
-            // --- Zone 1: Run or walk ---
+            // Zone 1: Run or walk
             if (distanceToTarget > runRadius)
             {
                 npc.IsRunning = true;

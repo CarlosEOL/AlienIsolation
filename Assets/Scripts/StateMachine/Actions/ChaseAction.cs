@@ -8,18 +8,18 @@ namespace StateMachine
     {
         public override NodeStatus Execute(NPC npc)
         {
-            if (npc.Target == null) return NodeStatus.Failure;
+            if (npc.Target == null || !npc.Target.gameObject.activeInHierarchy) 
+                return NodeStatus.Failure;
+            
+            if (npc.CheckIsInTargetRange())
+            {
+                npc.currentState = IStateAndGoals.NPCState.Attack;
+                return NodeStatus.Success;
+            }
 
             if (npc.HasTargetInSight())
             {
                 npc.agent.SetDestination(npc.Target.position);
-
-                if (npc.CheckIsInTargetRange())
-                {
-                    npc.currentState = IStateAndGoals.NPCState.Attack;
-                    return NodeStatus.Success;
-                }
-
                 return NodeStatus.Running;
             }
 

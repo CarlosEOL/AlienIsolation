@@ -20,5 +20,11 @@ namespace StateMachine
             }
             return NodeStatus.Failure; // Everyone failed.
         }
+        
+        public override void Reset()
+        {
+            foreach (Node child in children)
+                child.Reset();
+        }
     }
 }

@@ -1,11 +1,18 @@
 
-using System;
+using StateMachine;
 using UnityEngine;
 
 namespace NPCs
 {
     public class Enemy : NPC
     {
+        GameObject currentTarget;
+        
+        protected override void OnTargetDetected(Transform detectedTarget)
+        {
+            currentTarget = detectedTarget.gameObject;
+        }
+        
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.yellow;
@@ -21,22 +28,52 @@ namespace NPCs
             Gizmos.DrawRay(pos, rightBoundary * viewDistance);
             
 #if UNITY_EDITOR
-            UnityEditor.Handles.color = new Color(1, 1, 0, 0.1f); // Semi-transparent yellow
+            UnityEditor.Handles.color = new Color(1, 1, 0, 0.1f);
             UnityEditor.Handles.DrawSolidArc(pos, Vector3.up, leftBoundary, viewAngle, viewDistance);
 #endif
         }
 
-        public void Attack(Controller ply)
+        public override void Attack()
         {
             base.Attack();
+            
+            Debug.Log($"currentTarget: {currentTarget?.name ?? "NULL"} | npc.Target: {Target?.name ?? "NULL"}");
+            
+            if (currentTarget == null && Target != null)
+                currentTarget = Target.gameObject;
+    
+            if (currentTarget == null || !currentTarget.activeInHierarchy)
+            {
+                currentTarget = null;
+                Target = null;
+                return;
+            }
+    
+            Debug.Log($"Distance: {Vector3.Distance(transform.position, currentTarget.transform.position)} | Target: {currentTarget.name}");
+
+            
+            if (Vector3.Distance(transform.position, currentTarget.transform.position) < 1.5f)
+            {
+                Destroy(currentTarget.gameObject);
+                Debug.Log($"Destroyed target: {currentTarget.name}");
+                currentTarget = null;
+                Target = null;
+                currentState = IStateAndGoals.NPCState.Hunt;
+            }
         }
 
-        private void OnTriggerStay(Collider other)
+        private void OnTriggerEnter(Collider other)
         {
+            // Always prioritize player
             if (other.gameObject.CompareTag("Player"))
             {
-                Attack(other.GetComponent<Controller>());
+                currentTarget = other.gameObject;
+                return;
             }
+
+            // Only take friendly if no target yet
+            if (currentTarget == null && other.gameObject.CompareTag("Friendly"))
+                currentTarget = other.gameObject;
         }
     }
 

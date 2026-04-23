@@ -1,5 +1,4 @@
 
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -7,6 +6,7 @@ using UnityEngine.InputSystem;
 using Interactable;
 using NPCs;
 using StateMachine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(PlayerInputs))]
 [RequireComponent(typeof(Rigidbody))]
@@ -244,5 +244,16 @@ public class Controller : MonoBehaviour
     {
         if (_currentHealth + amount > MaxHealth) _currentHealth = MaxHealth;
         else _currentHealth += amount;
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var npc in EnlistedNPC)
+        {
+            npc.currentGoals = IStateAndGoals.NPCGoals.FindAndKill;
+            npc.currentState = IStateAndGoals.NPCState.Hunt;
+        }
+        
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

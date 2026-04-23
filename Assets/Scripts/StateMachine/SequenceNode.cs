@@ -24,11 +24,17 @@ namespace StateMachine.Nodes
                 }
         
                 currentIndex++;
-                if  (currentIndex >= children.Count) currentIndex = 0;
             }
     
             currentIndex = 0;
             return NodeStatus.Success;
+        }
+        
+        public override void Reset()
+        {
+            currentIndex = 0;
+            foreach (Node child in children)
+                child.Reset();
         }
     }
 }

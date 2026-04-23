@@ -71,17 +71,17 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 55261.973
   aerosolDensity:
-    m_OverrideState: 0
-    m_Value: 0.14
+    m_OverrideState: 1
+    m_Value: 0.249
   aerosolTint:
-    m_OverrideState: 0
-    m_Value: {r: 0.9, g: 0.9, b: 0.9, a: 1}
+    m_OverrideState: 1
+    m_Value: {r: 0.6505874, g: 0.6782619, b: 0.8113208, a: 1}
   aerosolMaximumAltitude:
     m_OverrideState: 0
     m_Value: 8289.296
   aerosolAnisotropy:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: 0.72
   ozoneDensityDimmer:
     m_OverrideState: 0
     m_Value: 1
@@ -191,7 +191,7 @@ MonoBehaviour:
     m_Value: 70
   meanFreePath:
     m_OverrideState: 1
-    m_Value: 150
+    m_Value: 50
   enableVolumetricFog:
     m_OverrideState: 1
     m_Value: 1
